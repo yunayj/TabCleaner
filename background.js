@@ -46,12 +46,13 @@ setInterval(async () => {
   let idleLimit = (await getFromLocalStorage("idleLimit")) || IDLE_LIMIT;
   const whitelist = (await getFromLocalStorage("whitelist")) || [];
   const activeTabs = await queryTabs({ active: true });
+  console.log("==get all avtive tab");
   const activeTabIds = activeTabs.map((tab) => {
     console.log("active tab ", tab.url);
     return tab.id;
   });
 
-  console.log("whitelist", whitelist);
+  console.log("==whitelist", whitelist);
   const now = Date.now();
 
   for (const tabId in idleTime) {
@@ -82,24 +83,36 @@ setInterval(async () => {
 
       //discard
       if (now - idleTime[tabId] > idleLimit) {
-        chrome.tabs.discard(parseInt(tab.id));
+        // 在丢弃之前修改标题
+        try {
+          // 检查URL是否可以访问
+          const tab = await chrome.tabs.get(parseInt(tabId));
+          if (
+            !tab.url.startsWith("chrome:") &&
+            !tab.url.startsWith("chrome-extension:")
+          ) {
+            await chrome.scripting.executeScript({
+              target: { tabId: parseInt(tabId) },
+              func: () => {
+                document.title = "💤 " + document.title;
+              },
+            });
+          }
+        } catch (e) {
+          console.log("Skip updating title for restricted page:", e);
+        }
 
-        chrome.scripting
-          .executeScript({
-            target: { tabId: tab.id },
-            func: () => {
-              document.title = "💤" + tab.title;
-            },
-          })
-          .then(() => console.log("injected a function"));
+        chrome.tabs.discard(parseInt(tabId));
         console.log("discard tab");
         delete idleTime[tabId]; // 移除已丢弃的标签页的闲置记录
+      } else {
+        console.log("存活时间为", now - idleTime[tabId], "低于", idleLimit);
       }
     } catch (e) {
       console.log(e);
     }
   }
-}, 5000); // 每分钟检查一次
+}, 10000); // 每分钟检查一次
 
 function isWhitelisted(url, whitelist) {
   return whitelist.some((pattern) => {
