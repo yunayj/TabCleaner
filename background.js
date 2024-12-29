@@ -20,12 +20,21 @@ chrome.tabs.onCreated.addListener((tab) => {
   resetIdleTime(tab.id);
 });
 
+// 监听来自 popup 的消息
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "resetIdleTime") {
+    resetIdleTime(message.tabId, message.time);
+    sendResponse();
+  }
+});
+
 // 重置闲置时间
 function resetIdleTime(tabId, time) {
-  if (!time) {
+  if (time) {
     idleTime[tabId] = time;
+  } else {
+    idleTime[tabId] = Date.now();
   }
-  idleTime[tabId] = Date.now();
 }
 
 // 检查闲置时间

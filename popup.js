@@ -1,18 +1,33 @@
+// Message display function
+function showMessage(text, isError = false) {
+  const messageEl = document.getElementById("message");
+  messageEl.textContent = text;
+  messageEl.classList.toggle("error", isError);
+  messageEl.classList.add("show");
+  setTimeout(() => {
+    messageEl.classList.remove("show");
+  }, 3000);
+}
+
 // discard button
 document.getElementById("discardCurrent").addEventListener("click", () => {
   discardTabs("current");
+  showMessage("Current tab has been discarded");
 });
 
 document.getElementById("discardHalfHour").addEventListener("click", () => {
   discardTabs("halfHour");
+  showMessage("Idle tabs have been discarded");
 });
 
 document.getElementById("discardOthers").addEventListener("click", () => {
   discardTabs("others");
+  showMessage("Other tabs have been discarded");
 });
 
 document.getElementById("discardGroup").addEventListener("click", () => {
   discardTabs("group");
+  showMessage("Tab group has been discarded");
 });
 
 function discardTabs(option) {
@@ -58,19 +73,25 @@ document.getElementById("ignoreTab1Week").addEventListener("click", () => {
   ignoreTab(7 * 24 * 60);
 });
 
+document.getElementById("resetProtect").addEventListener("click", () => {
+  ignoreTab(0);
+});
+
 // 当弹出窗口加载时，设置输入框的默认值
 document.addEventListener("DOMContentLoaded", () => {
   getCurrentTabUrlWithoutParams((url) => {
     document.getElementById("whitelistUrl").value = url; // 设置输入框默认值
   });
 });
-// 获取当前标签页的 URL，并去掉参数
+
+// 获取当前标签页的 URL，并转换为通配符格式
 function getCurrentTabUrlWithoutParams(callback) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs[0]) {
-      const url = tabs[0].url;
-      const urlWithoutParams = url.split("?")[0]; // 去掉参数
-      callback(urlWithoutParams);
+      const url = new URL(tabs[0].url);
+      // 构建通配符格式：domain/*
+      const wildcardUrl = `${url.hostname}/*`;
+      callback(wildcardUrl);
     }
   });
 }
@@ -83,38 +104,47 @@ document.getElementById("ignoreTab").addEventListener("click", () => {
       if (!whitelist.includes(url)) {
         whitelist.push(url);
         chrome.storage.local.set({ whitelist: whitelist }, () => {
-          console.log(`Added ${url} to whitelist.`);
+          showMessage(`Added ${url} to protection list`);
         });
+      } else {
+        showMessage(`${url} is already protected`, true);
       }
     });
   }
 });
 
 document.getElementById("resetIgnoreTab").addEventListener("click", () => {
-  const url = document.getElementById("ignoreTab").value.trim();
+  const url = document.getElementById("whitelistUrl").value.trim();
   if (url) {
     chrome.storage.local.get(["whitelist"], (result) => {
       const whitelist = result.whitelist || [];
       if (whitelist.includes(url)) {
         whitelist.splice(whitelist.indexOf(url), 1);
         chrome.storage.local.set({ whitelist: whitelist }, () => {
-          console.log(`remove ${url} from whitelist.`);
+          showMessage(`Removed ${url} from protection list`);
         });
+      } else {
+        showMessage(`${url} is not in protection list`, true);
       }
     });
   }
 });
 
-function ignoreTab(time) {
+function ignoreTab(minutes) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
       const tabId = tabs[0].id;
       const now = Date.now();
-      const expirationTime = now + time * 1000;
+      const expirationTime = now + minutes * 60 * 1000;
 
-      // 存储该标签页的忽略状态
-      chrome.extension.getBackgroundPage().resetIdleTime(tabId, expirationTime);
-      alert("this tab will not be discard for " + time / 60 + " hours.");
+      chrome.runtime.sendMessage(
+        { type: "resetIdleTime", tabId: tabId, time: expirationTime },
+        () => {
+          showMessage(
+            `This tab will not be discarded for ${minutes / 60} hours`
+          );
+        }
+      );
     }
   });
 }
@@ -123,10 +153,8 @@ function ignoreTab(time) {
 document.getElementById("save").addEventListener("click", () => {
   const idleLimit = document.getElementById("idleLimit").value;
   const idleLimitInMs = idleLimit * 1000; // 转换为毫秒
-
-  // 存储用户设置
   chrome.storage.local.set({ idleLimit: idleLimitInMs }, () => {
-    console.log("Idle limit set to " + idleLimitInMs + " milliseconds.");
+    showMessage(`Idle time limit saved: ${idleLimit} seconds`);
   });
 });
 

@@ -1,46 +1,282 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Tab Disposer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
+            width: 400px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 10px;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .section {
+            margin-bottom: 12px;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .help-icon {
+            color: #999;
+            cursor: help;
+            position: relative;
+            font-size: 12px;
+        }
+
+        .help-icon:hover::after {
+            content: attr(data-help);
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #333;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 11px;
             width: 200px;
-            font-family: Arial, sans-serif;
+            z-index: 1;
+            line-height: 1.4;
+            margin-top: 5px;
+            text-align: left;
+            white-space: normal;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* 当提示框超出右边界时，向左显示 */
+        @media (max-width: 400px) {
+            .help-icon:hover::after {
+                right: auto;
+                left: 50%;
+                transform: translateX(-90%);
+            }
+        }
+
+        .button-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 6px;
         }
 
         button {
+            flex: 1;
+            padding: 6px 8px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            background-color: #f0f2f5;
+            color: #333;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background-color: #e4e6e9;
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"] {
             width: 100%;
-            margin: 2px;
+        }
+
+        input[type="number"] {
+            width: 70px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .input-group button {
+            padding: 6px 10px;
+        }
+
+        #message {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            background: #4caf50;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        #message.show {
+            opacity: 1;
+        }
+
+        #message.error {
+            background: #f44336;
+        }
+
+        .protection-info {
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 8px;
+            margin-bottom: 8px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .protection-info p {
+            margin: 4px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .protection-info ul {
+            margin: 4px 0 8px;
+            padding-left: 16px;
+            list-style-type: disc;
+        }
+
+        .protection-info li {
+            margin: 2px 0;
+        }
+
+        .protection-info code {
+            background: #fff;
+            padding: 1px 4px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            color: #444;
+        }
+
+        .protection-info i {
+            color: #666;
             font-size: 12px;
         }
     </style>
 </head>
 
 <body>
-    <button id="discardCurrent">Discard Current</button>
-    <button id="discardHalfHour">Discard Idle 30 Min</button>
-    <button id="discardOthers">Discard Other</button>
-    <button id="discardGroup">Discard Group</button>
-
-    <hr/>
-
-
-    <button id="ignoreTab24Hour">ignore this tab in 24 hours</button>
-    <button id="ignoreTab1Week">ignore this tab in 1 week</button>
-    <input type="text" style="width:100%" id="whitelistUrl" placeholder="Enter URL or pattern" />
-    <button style="width:45%" id="ignoreTab">ignore</button>
-    <button style="width:45%" id="resetIgnoreTab">reset</button>
-    <hr/>
-
-
-    <div>
-    <input style="width:50%" type="number" id="idleLimit" placeholder="Idle time" min="1" /> second
-    <button style="width:30%" id="save">Save</button>
+    <div class="section">
+        <div class="section-title">
+            <span>Quick Discard</span>
+            <i class="fas fa-question-circle help-icon" data-help="Discard tabs to free up memory. Current: discard active tab. Others: discard all except active. Group: discard tabs in current group. Idle: discard tabs inactive for 30+ minutes."></i>
+        </div>
+        <div class="button-row">
+            <button id="discardCurrent">
+                <i class="fas fa-times"></i>Discard Current Tab
+            </button>
+            <button id="discardOthers">
+                <i class="fas fa-external-link-alt"></i>Discard Others
+            </button>
+        </div>
+        <div class="button-row">
+            <button id="discardGroup">
+                <i class="fas fa-layer-group"></i>Discard This Tab Group
+            </button>
+            <button id="discardHalfHour">
+                <i class="fas fa-clock"></i>Discard Tabs Idle 30 Mins
+            </button>
+        </div>
     </div>
+
+    <div class="section">
+        <div class="section-title">
+            <span>Protection Current Tab</span>
+            <i class="fas fa-question-circle help-icon" data-help="Protect tabs from auto-discard using temporary protection or permanent whitelist rules."></i>
+        </div>
+        <div class="protection-info">
+            <p><i class="fas fa-clock"></i> Temporary Protection:</p>
+            <ul>
+                <li>Protect current tab from being discarded for a specific duration</li>
+                <li>Choose between 24 hours or 1 week protection</li>
+            </ul>
+        </div>
+        <div class="button-row">
+            <button id="ignoreTab24Hour">
+                <i class="fas fa-shield-alt"></i>Don't Discard in 24h
+            </button>
+            <button id="ignoreTab1Week">
+                <i class="fas fa-shield-alt"></i>Don't Discard in 1 week
+            </button>
+            <button id="resetProtect">
+                <i class="fas fa-shield-alt"></i>Reset
+            </button>
+        </div>
+
+        <div class="protection-info" style="margin-top: 12px;">
+            <p><i class="fas fa-info-circle"></i> Permanent Protection (Whitelist):</p>
+            <ul>
+                <li>Supports wildcards in URL patterns:</li>
+                <li><code>*.example.com</code> - All subdomains</li>
+                <li><code>example.com/*</code> - All paths</li>
+                <li><code>*example*</code> - Contains 'example'</li>
+            </ul>
+        </div>
+        <div class="input-group">
+            <input type="text" id="whitelistUrl" placeholder="Enter URL pattern (e.g. *.example.com/*)" />
+            <button id="ignoreTab" style="padding: 6px 8px;" title="Add to whitelist">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button id="resetIgnoreTab" style="padding: 6px 8px;" title="Remove from whitelist">
+                <i class="fas fa-undo"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">
+            <span>Auto Discard Settings</span>
+            <i class="fas fa-question-circle help-icon" data-help="Set idle time limit (in seconds). Default: 1800 (30 min). Lower values save more memory but may discard tabs more frequently."></i>
+        </div>
+        <div class="protection-info">
+            <p><i class="fas fa-clock"></i> Idle Time Limit:</p>
+            <ul>
+                <li>Tabs inactive longer than this will be auto-discarded</li>
+                <li>Default: 1800 seconds (30 minutes)</li>
+            </ul>
+        </div>
+        <div class="input-group">
+            <input type="number" id="idleLimit" placeholder="Seconds" min="1" />
+            <span style="color: #666; font-size: 12px;">sec</span>
+            <button id="save">
+                <i class="fas fa-save"></i>Save
+            </button>
+        </div>
+    </div>
+
+    <div id="message"></div>
     <script src="popup.js"></script>
-
-
 </body>
-
 </html>
