@@ -1,0 +1,152 @@
+{
+  "extensionName": {
+    "message": "TabCleaner"
+  },
+  "extensionDescription": {
+    "message": "Automatically discards idle tabs to save memory"
+  },
+  "quickDiscard": {
+    "message": "Quick Discard"
+  },
+  "discardCurrentTab": {
+    "message": "Discard Current Tab"
+  },
+  "discardOthers": {
+    "message": "Discard Others"
+  },
+  "discardThisTabGroup": {
+    "message": "Discard This Tab Group"
+  },
+  "discardTabsIdle30Mins": {
+    "message": "Discard Tabs Idle 30 Mins"
+  },
+  "quickDiscardHelp": {
+    "message": "Discard tabs to free up memory. Current: discard active tab. Others: discard all except active. Group: discard tabs in current group. Idle: discard tabs inactive for 30+ minutes."
+  },
+  "protectionCurrentTab": {
+    "message": "Protection Current Tab"
+  },
+  "temporaryProtection": {
+    "message": "Temporary Protection"
+  },
+  "temporaryProtectionDesc": {
+    "message": "Protect current tab from being discarded for a specific duration"
+  },
+  "chooseProtectionDuration": {
+    "message": "Choose between 24 hours or 1 week protection"
+  },
+  "dontDiscardIn24h": {
+    "message": "Don't Discard in 24h"
+  },
+  "dontDiscardIn1Week": {
+    "message": "Don't Discard in 1 week"
+  },
+  "resetProtection": {
+    "message": "Reset"
+  },
+  "protectionHelp": {
+    "message": "Protect tabs from auto-discard using temporary protection or permanent whitelist rules."
+  },
+  "permanentProtection": {
+    "message": "Permanent Protection (Whitelist)"
+  },
+  "wildcardSupport": {
+    "message": "Supports wildcards in URL patterns:"
+  },
+  "allSubdomains": {
+    "message": "All subdomains"
+  },
+  "allPaths": {
+    "message": "All paths"
+  },
+  "containsExample": {
+    "message": "Contains 'example'"
+  },
+  "enterUrlPattern": {
+    "message": "Enter URL pattern (e.g. *.example.com/*)"
+  },
+  "addToWhitelist": {
+    "message": "Add to whitelist"
+  },
+  "removeFromWhitelist": {
+    "message": "Remove from whitelist"
+  },
+  "autoDiscardSettings": {
+    "message": "Auto Discard Settings"
+  },
+  "idleTimeLimit": {
+    "message": "Idle Time Limit"
+  },
+  "idleTimeLimitDesc": {
+    "message": "Tabs inactive longer than this will be auto-discarded"
+  },
+  "defaultTime": {
+    "message": "Default: 1800 seconds (30 minutes)"
+  },
+  "autoDiscardSettingsHelp": {
+    "message": "Set idle time limit (in seconds). Default: 1800 (30 min). Lower values save more memory but may discard tabs more frequently."
+  },
+  "save": {
+    "message": "Save"
+  },
+  "tabDiscarded": {
+    "message": "Current tab has been discarded"
+  },
+  "idleTabsDiscarded": {
+    "message": "Idle tabs have been discarded"
+  },
+  "otherTabsDiscarded": {
+    "message": "Other tabs have been discarded"
+  },
+  "tabGroupDiscarded": {
+    "message": "Tab group has been discarded"
+  },
+  "addedToProtectionList": {
+    "message": "Added $url$ to protection list",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "alreadyProtected": {
+    "message": "$url$ is already protected",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "removedFromProtectionList": {
+    "message": "Removed $url$ from protection list",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "notInProtectionList": {
+    "message": "$url$ is not in protection list",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "tabProtectedFor": {
+    "message": "This tab will not be discarded for $hours$ hours",
+    "placeholders": {
+      "hours": {
+        "content": "$1"
+      }
+    }
+  },
+  "idleLimitSaved": {
+    "message": "Idle time limit saved: $seconds$ seconds",
+    "placeholders": {
+      "seconds": {
+        "content": "$1"
+      }
+    }
+  }
+}

@@ -1,6 +1,9 @@
 // Message display function
-function showMessage(text, isError = false) {
+function showMessage(messageId, substitutions = null, isError = false) {
   const messageEl = document.getElementById("message");
+  const text = substitutions
+    ? chrome.i18n.getMessage(messageId, substitutions)
+    : chrome.i18n.getMessage(messageId);
   messageEl.textContent = text;
   messageEl.classList.toggle("error", isError);
   messageEl.classList.add("show");
@@ -9,25 +12,77 @@ function showMessage(text, isError = false) {
   }, 3000);
 }
 
+// Initialize i18n text
+function initializeI18n() {
+  // 普通文本
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    const messageId = element.getAttribute("data-i18n");
+    const message = chrome.i18n.getMessage(messageId);
+    if (message) {
+      element.textContent = message;
+    }
+  });
+
+  // 占位符文本
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    const messageId = element.getAttribute("data-i18n-placeholder");
+    const message = chrome.i18n.getMessage(messageId);
+    if (message) {
+      element.placeholder = message;
+    }
+  });
+
+  // 标题提示
+  document.querySelectorAll("[data-i18n-title]").forEach((element) => {
+    const messageId = element.getAttribute("data-i18n-title");
+    const message = chrome.i18n.getMessage(messageId);
+    if (message) {
+      element.title = message;
+    }
+  });
+}
+
+// Initialize when DOM is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  initializeI18n();
+  getCurrentTabUrlWithoutParams((url) => {
+    document.getElementById("whitelistUrl").value = url;
+  });
+  loadIdleLimit();
+});
+
+// 加载闲置时间限制
+function loadIdleLimit() {
+  chrome.storage.local.get(["idleLimit"], (result) => {
+    const idleLimitInput = document.getElementById("idleLimit");
+    if (result.idleLimit) {
+      idleLimitInput.value = Math.floor(result.idleLimit / 1000);
+    } else {
+      // 默认30分钟
+      idleLimitInput.value = 1800;
+    }
+  });
+}
+
 // discard button
 document.getElementById("discardCurrent").addEventListener("click", () => {
   discardTabs("current");
-  showMessage("Current tab has been discarded");
+  showMessage("tabDiscarded");
 });
 
 document.getElementById("discardHalfHour").addEventListener("click", () => {
   discardTabs("halfHour");
-  showMessage("Idle tabs have been discarded");
+  showMessage("idleTabsDiscarded");
 });
 
 document.getElementById("discardOthers").addEventListener("click", () => {
   discardTabs("others");
-  showMessage("Other tabs have been discarded");
+  showMessage("otherTabsDiscarded");
 });
 
 document.getElementById("discardGroup").addEventListener("click", () => {
   discardTabs("group");
-  showMessage("Tab group has been discarded");
+  showMessage("tabGroupDiscarded");
 });
 
 function discardTabs(option) {
@@ -77,13 +132,6 @@ document.getElementById("resetProtect").addEventListener("click", () => {
   ignoreTab(0);
 });
 
-// 当弹出窗口加载时，设置输入框的默认值
-document.addEventListener("DOMContentLoaded", () => {
-  getCurrentTabUrlWithoutParams((url) => {
-    document.getElementById("whitelistUrl").value = url; // 设置输入框默认值
-  });
-});
-
 // 获取当前标签页的 URL，并转换为通配符格式
 function getCurrentTabUrlWithoutParams(callback) {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -104,10 +152,10 @@ document.getElementById("ignoreTab").addEventListener("click", () => {
       if (!whitelist.includes(url)) {
         whitelist.push(url);
         chrome.storage.local.set({ whitelist: whitelist }, () => {
-          showMessage(`Added ${url} to protection list`);
+          showMessage("addedToProtectionList", [url]);
         });
       } else {
-        showMessage(`${url} is already protected`, true);
+        showMessage("alreadyProtected", [url], true);
       }
     });
   }
@@ -121,10 +169,10 @@ document.getElementById("resetIgnoreTab").addEventListener("click", () => {
       if (whitelist.includes(url)) {
         whitelist.splice(whitelist.indexOf(url), 1);
         chrome.storage.local.set({ whitelist: whitelist }, () => {
-          showMessage(`Removed ${url} from protection list`);
+          showMessage("removedFromProtectionList", [url]);
         });
       } else {
-        showMessage(`${url} is not in protection list`, true);
+        showMessage("notInProtectionList", [url], true);
       }
     });
   }
@@ -140,32 +188,20 @@ function ignoreTab(minutes) {
       chrome.runtime.sendMessage(
         { type: "resetIdleTime", tabId: tabId, time: expirationTime },
         () => {
-          showMessage(
-            `This tab will not be discarded for ${minutes / 60} hours`
-          );
+          if (minutes > 0) {
+            showMessage("tabProtectedFor", [minutes / 60]);
+          }
         }
       );
     }
   });
 }
 
-//设置最大闲置时间
+// 保存闲置时间限制
 document.getElementById("save").addEventListener("click", () => {
   const idleLimit = document.getElementById("idleLimit").value;
-  const idleLimitInMs = idleLimit * 1000; // 转换为毫秒
+  const idleLimitInMs = idleLimit * 1000;
   chrome.storage.local.set({ idleLimit: idleLimitInMs }, () => {
-    showMessage(`Idle time limit saved: ${idleLimit} seconds`);
-  });
-});
-
-// 在弹出窗口打开时加载当前设置
-document.addEventListener("DOMContentLoaded", () => {
-  chrome.storage.local.get(["idleLimit"], (result) => {
-    if (result.idleLimit) {
-      document.getElementById("idleLimit").value = result.idleLimit / 1000; // 转换为秒
-    } else {
-      //默认的时间
-      document.getElementById("idleLimit").value = 10;
-    }
+    showMessage("idleLimitSaved", [idleLimit]);
   });
 });

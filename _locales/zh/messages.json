@@ -1,0 +1,152 @@
+{
+  "extensionName": {
+    "message": "标签页清理器"
+  },
+  "extensionDescription": {
+    "message": "自动丢弃闲置标签页以节省内存"
+  },
+  "quickDiscard": {
+    "message": "快速丢弃"
+  },
+  "discardCurrentTab": {
+    "message": "丢弃当前标签页"
+  },
+  "discardOthers": {
+    "message": "丢弃其他标签页"
+  },
+  "discardThisTabGroup": {
+    "message": "丢弃当前标签组"
+  },
+  "discardTabsIdle30Mins": {
+    "message": "丢弃闲置30分钟的标签页"
+  },
+  "quickDiscardHelp": {
+    "message": "丢弃标签页以释放内存。当前：丢弃活动标签页。其他：丢弃除活动标签页外的所有标签页。组：丢弃当前标签组。闲置：丢弃超过30分钟未使用的标签页。"
+  },
+  "protectionCurrentTab": {
+    "message": "保护当前标签页"
+  },
+  "temporaryProtection": {
+    "message": "临时保护"
+  },
+  "temporaryProtectionDesc": {
+    "message": "在指定时间内保护当前标签页不被丢弃"
+  },
+  "chooseProtectionDuration": {
+    "message": "选择24小时或1周的保护时间"
+  },
+  "dontDiscardIn24h": {
+    "message": "24小时内不丢弃"
+  },
+  "dontDiscardIn1Week": {
+    "message": "1周内不丢弃"
+  },
+  "resetProtection": {
+    "message": "重置"
+  },
+  "permanentProtection": {
+    "message": "永久保护（白名单）"
+  },
+  "protectionHelp": {
+    "message": "使用临时保护或永久白名单规则来防止标签页被自动丢弃。"
+  },
+  "wildcardSupport": {
+    "message": "支持通配符URL模式："
+  },
+  "allSubdomains": {
+    "message": "所有子域名"
+  },
+  "allPaths": {
+    "message": "所有路径"
+  },
+  "containsExample": {
+    "message": "包含'example'"
+  },
+  "enterUrlPattern": {
+    "message": "输入URL模式（例如：*.example.com/*）"
+  },
+  "addToWhitelist": {
+    "message": "添加到白名单"
+  },
+  "removeFromWhitelist": {
+    "message": "从白名单移除"
+  },
+  "autoDiscardSettings": {
+    "message": "自动丢弃设置"
+  },
+  "idleTimeLimit": {
+    "message": "闲置时间限制"
+  },
+  "idleTimeLimitDesc": {
+    "message": "超过此时间的不活动标签页将被自动丢弃"
+  },
+  "defaultTime": {
+    "message": "默认：1800秒（30分钟）"
+  },
+  "autoDiscardSettingsHelp": {
+    "message": "设置闲置时间限制（以秒为单位）。默认值：1800（30分钟）。较低的值可以节省更多内存，但可能会更频繁地丢弃标签页。"
+  },
+  "save": {
+    "message": "保存"
+  },
+  "tabDiscarded": {
+    "message": "已丢弃当前标签页"
+  },
+  "idleTabsDiscarded": {
+    "message": "已丢弃闲置标签页"
+  },
+  "otherTabsDiscarded": {
+    "message": "已丢弃其他标签页"
+  },
+  "tabGroupDiscarded": {
+    "message": "已丢弃标签组"
+  },
+  "addedToProtectionList": {
+    "message": "已将 $url$ 添加到保护列表",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "alreadyProtected": {
+    "message": "$url$ 已在保护列表中",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "removedFromProtectionList": {
+    "message": "已将 $url$ 从保护列表中移除",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "notInProtectionList": {
+    "message": "$url$ 不在保护列表中",
+    "placeholders": {
+      "url": {
+        "content": "$1"
+      }
+    }
+  },
+  "tabProtectedFor": {
+    "message": "此标签页将在 $hours$ 小时内不会被丢弃",
+    "placeholders": {
+      "hours": {
+        "content": "$1"
+      }
+    }
+  },
+  "idleLimitSaved": {
+    "message": "已保存闲置时间限制：$seconds$ 秒",
+    "placeholders": {
+      "seconds": {
+        "content": "$1"
+      }
+    }
+  }
+}
