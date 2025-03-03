@@ -85,12 +85,12 @@ document.getElementById("discardGroup").addEventListener("click", () => {
   showMessage("tabGroupDiscarded");
 });
 
-function discardTabs(option) {
-  chrome.tabs.query({ currentWindow: true }, (tabs) => {
+async function discardTabs(option) {
+  chrome.tabs.query({ currentWindow: true }, async (tabs) => {
     const now = Date.now();
     const activeTabId = tabs.find((tab) => tab.active)?.id;
 
-    tabs.forEach((tab) => {
+    for (const tab of tabs) {
       let shouldDiscard = false;
 
       switch (option) {
@@ -114,7 +114,7 @@ function discardTabs(option) {
       if (shouldDiscard) {
         chrome.tabs.discard(tab.id);
       }
-    });
+    }
   });
 }
 
