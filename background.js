@@ -1,4 +1,5 @@
 let idleTime = {};
+let lastActiveTabId = null; // 记录上一个激活的标签页ID
 const IDLE_LIMIT = 1 * 60 * 1000; // default idle time: 1 minutes
 
 // 监听标签页更新事件
@@ -13,12 +14,29 @@ const IDLE_LIMIT = 1 * 60 * 1000; // default idle time: 1 minutes
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   console.log("关闭了一个标签页", tabId);
   delete idleTime[tabId];
+
+  // 如果关闭的是最后激活的标签页，清除记录
+  if (lastActiveTabId === tabId) {
+    lastActiveTabId = null;
+  }
 });
 
 // 监听标签页激活事件
 chrome.tabs.onActivated.addListener((activeInfo) => {
   console.log("激活了一个标签页", activeInfo.tabId);
+
+  // 如果有上一个激活的标签页，重置其闲置时间为当前时间
+  // 这样可以正确记录该标签页最后一次被使用的时间
+  if (lastActiveTabId !== null && lastActiveTabId !== activeInfo.tabId) {
+    resetIdleTime(lastActiveTabId);
+    console.log("重置上一个激活标签页的闲置时间", lastActiveTabId);
+  }
+
+  // 重置当前激活标签页的闲置时间
   resetIdleTime(activeInfo.tabId);
+
+  // 更新最后激活的标签页ID
+  lastActiveTabId = activeInfo.tabId;
 });
 
 // 监听新标签页的创建事件
