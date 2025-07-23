@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("whitelistUrl").value = url;
   });
   loadIdleLimit();
+  loadTabStatus();
 });
 
 // 加载闲置时间限制
@@ -68,21 +69,25 @@ function loadIdleLimit() {
 document.getElementById("discardCurrent").addEventListener("click", () => {
   discardTabs("current");
   showMessage("tabDiscarded");
+  updateTabStatusAfterDiscard();
 });
 
 document.getElementById("discardHalfHour").addEventListener("click", () => {
   discardTabs("halfHour");
   showMessage("idleTabsDiscarded");
+  updateTabStatusAfterDiscard();
 });
 
 document.getElementById("discardOthers").addEventListener("click", () => {
   discardTabs("others");
   showMessage("otherTabsDiscarded");
+  updateTabStatusAfterDiscard();
 });
 
 document.getElementById("discardGroup").addEventListener("click", () => {
   discardTabs("group");
   showMessage("tabGroupDiscarded");
+  updateTabStatusAfterDiscard();
 });
 
 async function discardTabs(option) {
@@ -205,3 +210,33 @@ document.getElementById("save").addEventListener("click", () => {
     showMessage("idleLimitSaved", [idleLimit]);
   });
 });
+
+// 加载标签页状态信息
+function loadTabStatus() {
+  chrome.tabs.query({}, (tabs) => {
+    const totalTabs = tabs.length;
+    const activeTabs = tabs.filter((tab) => !tab.discarded).length;
+    const discardedTabs = tabs.filter((tab) => tab.discarded).length;
+
+    // 更新显示
+    const activeTabsElement = document.getElementById("activeTabsCount");
+    const discardedTabsElement = document.getElementById("discardedTabsCount");
+    const totalTabsElement = document.getElementById("totalTabsCount");
+
+    if (activeTabsElement) activeTabsElement.textContent = activeTabs;
+    if (discardedTabsElement) discardedTabsElement.textContent = discardedTabs;
+    if (totalTabsElement) totalTabsElement.textContent = totalTabs;
+  });
+}
+
+// 在执行丢弃操作后更新状态
+function updateTabStatusAfterDiscard() {
+  setTimeout(() => {
+    loadTabStatus();
+  }, 500); // 延迟500ms确保丢弃操作完成
+}
+
+// 定期更新标签页状态（每5秒更新一次）
+setInterval(() => {
+  loadTabStatus();
+}, 5000);

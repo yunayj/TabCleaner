@@ -20,6 +20,14 @@ A Chrome extension that automatically manages your tabs to save memory and impro
 - **Permanent whitelist**: Add URL patterns to permanently protect certain sites
 - **Wildcard support**: Use patterns like `*.example.com/*` to protect entire domains
 
+### 📊 Tab Status & Tracking
+- **Real-time status display**: Shows current count of active, discarded, and total tabs at the top of popup
+- **Auto-refresh**: Status updates every 5 seconds and immediately after discard operations
+- **Visual indicators**: Clear console output with emoji indicators when tabs are discarded
+- **Discard history**: Track and display recently discarded tabs with timestamps
+- **Detailed information**: Shows tab title, URL, and discard time for each discarded tab
+- **History management**: View recent discard history and clear it when needed
+
 ### 🌍 Multi-language Support
 - English
 - 中文 (Chinese)
@@ -35,9 +43,20 @@ A Chrome extension that automatically manages your tabs to save memory and impro
 ## Usage
 
 Click the TabCleaner icon in your toolbar to access:
-- Quick discard options
-- Tab protection settings
-- Auto-discard configuration
+- **Tab status overview**: Real-time display of active, discarded, and total tab counts
+- **Quick discard options**: Instantly discard current tab, other tabs, or tab groups
+- **Tab protection settings**: Set temporary or permanent protection for important tabs
+- **Auto-discard configuration**: Customize idle time limits for automatic discarding
+- **Discard history**: View recently discarded tabs and clear history
+
+### Tab Status Display
+
+The popup now shows a status bar at the top with three key metrics:
+- **Active**: Number of currently loaded (non-discarded) tabs
+- **Discarded**: Number of tabs that have been discarded to save memory
+- **Total**: Total number of tabs across all windows
+
+This information updates automatically every 5 seconds and immediately after any discard operation.
 
 ## Recent Updates (v1.0.0)
 

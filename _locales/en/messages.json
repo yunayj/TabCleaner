@@ -148,5 +148,17 @@
         "content": "$1"
       }
     }
+  },
+  "tabStatus": {
+    "message": "Tab Status"
+  },
+  "activeTabs": {
+    "message": "Active"
+  },
+  "discardedTabs": {
+    "message": "Discarded"
+  },
+  "totalTabs": {
+    "message": "Total"
   }
 }

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试页面 - 标签页丢弃功能</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .highlight {
+            background: #ffffcc;
+            padding: 10px;
+            border-left: 4px solid #ffcc00;
+            margin: 10px 0;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗑️ 标签页丢弃功能测试</h1>
+    
+    <div class="section">
+        <h2>功能说明</h2>
+        <p>这个Chrome扩展现在已经增强了标签页丢弃功能，包含以下新特性：</p>
+        <ul>
+            <li><strong>标签页状态显示</strong>：在popup顶部实时显示活跃、已丢弃和总标签页数量</li>
+            <li><strong>丢弃标识</strong>：当标签页被丢弃时，会在控制台输出明显的标识信息</li>
+            <li><strong>历史记录</strong>：记录最近被丢弃的标签页信息</li>
+            <li><strong>可视化显示</strong>：在popup界面中显示最近丢弃的标签页列表</li>
+            <li><strong>实时更新</strong>：状态信息每5秒自动更新，操作后立即更新</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>测试步骤</h2>
+        <ol>
+            <li>在Chrome中加载这个扩展（开发者模式）</li>
+            <li>打开多个标签页（包括这个测试页面）</li>
+            <li>点击扩展图标，打开popup界面</li>
+            <li>尝试使用"丢弃当前标签页"或"丢弃其他标签页"功能</li>
+            <li>观察控制台输出和popup界面中的"最近丢弃的标签页"部分</li>
+        </ol>
+    </div>
+
+    <div class="highlight">
+        <h3>🔍 如何查看丢弃标识</h3>
+        <p><strong>控制台输出</strong>：按F12打开开发者工具，在Console标签中查看丢弃信息</p>
+        <p><strong>Popup界面</strong>：点击扩展图标，在"最近丢弃的标签页"部分查看历史记录</p>
+    </div>
+
+    <div class="section">
+        <h2>预期效果</h2>
+        <p>使用扩展时，你应该能看到：</p>
+        <ul>
+            <li><strong>状态栏</strong>：popup顶部显示当前标签页状态统计（活跃/已丢弃/总计）</li>
+            <li><strong>实时更新</strong>：执行丢弃操作后，状态数字立即更新</li>
+            <li><strong>自动刷新</strong>：状态信息每5秒自动更新，反映最新状态</li>
+            <li>控制台中显示：<code>🗑️ 标签页已被丢弃: {标题: "...", 网址: "...", 时间: "..."}</code></li>
+            <li>Popup界面中的"最近丢弃的标签页"列表会更新</li>
+            <li>每个丢弃记录包含标题、URL和丢弃时间</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>自动丢弃测试</h2>
+        <p>要测试自动丢弃功能：</p>
+        <ol>
+            <li>在popup中设置较短的闲置时间（如60秒）</li>
+            <li>打开多个标签页</li>
+            <li>切换到其他标签页，让这个页面闲置</li>
+            <li>等待设定的时间后，检查控制台和popup界面</li>
+        </ol>
+    </div>
+
+    <script>
+        // 添加一些动态内容，让页面看起来更活跃
+        setInterval(() => {
+            const now = new Date().toLocaleTimeString();
+            document.title = `测试页面 - ${now}`;
+        }, 1000);
+
+        console.log("测试页面已加载，当前时间:", new Date().toLocaleString());
+    </script>
+</body>
+</html>

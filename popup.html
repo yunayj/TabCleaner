@@ -147,10 +147,67 @@
             color: #666;
             font-size: 12px;
         }
+
+        .status-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .status-info h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-numbers {
+            display: flex;
+            justify-content: space-around;
+            gap: 10px;
+        }
+
+        .status-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .status-count {
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .status-label {
+            font-size: 10px;
+            opacity: 0.9;
+        }
     </style>
 </head>
 
 <body>
+    <div class="status-info">
+        <h3 data-i18n="tabStatus">Tab Status</h3>
+        <div class="status-numbers">
+            <div class="status-item">
+                <span class="status-count" id="activeTabsCount">-</span>
+                <span class="status-label" data-i18n="activeTabs">Active</span>
+            </div>
+            <div class="status-item">
+                <span class="status-count" id="discardedTabsCount">-</span>
+                <span class="status-label" data-i18n="discardedTabs">Discarded</span>
+            </div>
+            <div class="status-item">
+                <span class="status-count" id="totalTabsCount">-</span>
+                <span class="status-label" data-i18n="totalTabs">Total</span>
+            </div>
+        </div>
+    </div>
+
     <div class="section">
         <div class="section-title">
             <span data-i18n="quickDiscard">Quick Discard</span>

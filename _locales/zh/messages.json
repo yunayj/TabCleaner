@@ -148,5 +148,17 @@
         "content": "$1"
       }
     }
+  },
+  "tabStatus": {
+    "message": "标签页状态"
+  },
+  "activeTabs": {
+    "message": "活跃"
+  },
+  "discardedTabs": {
+    "message": "已丢弃"
+  },
+  "totalTabs": {
+    "message": "总计"
   }
 }
