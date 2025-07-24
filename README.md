@@ -28,6 +28,13 @@ A Chrome extension that automatically manages your tabs to save memory and impro
 - **Detailed information**: Shows tab title, URL, and discard time for each discarded tab
 - **History management**: View recent discard history and clear it when needed
 
+### 🎨 Modern UI Design
+- **Glassmorphism Effects**: Semi-transparent cards with backdrop blur
+- **Gradient Backgrounds**: Beautiful purple gradient theme throughout
+- **Smooth Animations**: Hover effects, loading states, and transition animations
+- **Color-coded Buttons**: Visual distinction for different action types
+- **Responsive Layout**: Optimized spacing and typography for better readability
+
 ### 🌍 Multi-language Support
 - English
 - 中文 (Chinese)
@@ -58,7 +65,15 @@ The popup now shows a status bar at the top with three key metrics:
 
 This information updates automatically every 5 seconds and immediately after any discard operation.
 
-## Recent Updates (v1.0.0)
+## Recent Updates (v0.4) - UI Redesign ✨
+
+- **🎨 Complete UI Redesign**: Modern glassmorphism design with gradient backgrounds
+- **✨ Smooth Animations**: Button hover effects, ripple animations, and loading states
+- **🌈 Color-coded Actions**: Different button colors for different action types
+- **📱 Enhanced Layout**: Improved spacing, typography, and responsive design
+- **🎪 Visual Effects**: Backdrop blur, floating animations, and modern card designs
+
+## Previous Updates (v1.0.0)
 
 - **Fixed critical bug**: Tabs are no longer incorrectly discarded when switching between them
 - **Improved idle time tracking**: Now properly records when each tab was last used

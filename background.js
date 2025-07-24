@@ -122,9 +122,14 @@ setInterval(async () => {
       //discard
       if (now - idleTime[tabId] > idleLimit) {
         console.log("准备discard");
-        chrome.tabs.discard(parseInt(tabId));
-        console.log("discard tab");
-        delete idleTime[tabId]; // 移除已丢弃的标签页的闲置记录
+        try {
+          await chrome.tabs.discard(parseInt(tabId));
+          console.log("✅ 自动丢弃标签页: " + tab.title);
+          delete idleTime[tabId]; // 移除已丢弃的标签页的闲置记录
+        } catch (error) {
+          console.log('❌ 自动丢弃失败 "' + tab.title + '": ' + error.message);
+          // 如果丢弃失败，不删除闲置记录，下次继续尝试
+        }
       } else {
         console.log("存活时间为", now - idleTime[tabId], "低于", idleLimit);
       }

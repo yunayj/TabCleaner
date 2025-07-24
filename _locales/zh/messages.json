@@ -9,16 +9,16 @@
     "message": "快速丢弃"
   },
   "discardCurrentTab": {
-    "message": "丢弃当前标签页"
+    "message": "当前标签页"
   },
   "discardOthers": {
-    "message": "丢弃其他标签页"
+    "message": "其他标签页"
   },
   "discardThisTabGroup": {
-    "message": "丢弃当前标签组"
+    "message": "标签组"
   },
   "discardTabsIdle30Mins": {
-    "message": "丢弃闲置30分钟的标签页"
+    "message": "闲置30分钟"
   },
   "quickDiscardHelp": {
     "message": "丢弃标签页以释放内存。当前：丢弃活动标签页。其他：丢弃除活动标签页外的所有标签页。组：丢弃当前标签组。闲置：丢弃超过30分钟未使用的标签页。"
@@ -36,13 +36,13 @@
     "message": "选择24小时或1周的保护时间"
   },
   "dontDiscardIn24h": {
-    "message": "24小时内不丢弃"
+    "message": "保护24小时"
   },
   "dontDiscardIn1Week": {
-    "message": "1周内不丢弃"
+    "message": "保护1周"
   },
   "resetProtection": {
-    "message": "重置"
+    "message": "重置保护"
   },
   "permanentProtection": {
     "message": "永久保护（白名单）"

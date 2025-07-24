@@ -4,64 +4,160 @@
     <title data-i18n="tabDisposer">Tab Disposer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            width: 400px;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            padding: 10px;
+            width: 480px;
+            height: 580px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 0;
             margin: 0;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+        }
+
+        .container {
+            padding: 12px;
+            height: 100%;
+            overflow-y: auto;
+            box-sizing: border-box;
         }
 
         .section {
-            margin-bottom: 12px;
-            background: white;
-            padding: 5px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
 
         .section-title {
-            font-weight: bold;
+            font-weight: 600;
             margin-bottom: 10px;
-            color: #333;
+            color: #2d3748;
             display: flex;
             align-items: center;
+            font-size: 14px;
+            letter-spacing: -0.025em;
+        }
+
+        .section-title i {
+            margin-right: 6px;
+            color: #667eea;
+            font-size: 16px;
         }
 
         .button-row {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 6px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .button-row.single {
+            grid-template-columns: 1fr;
         }
 
         button {
-            flex: 1;
-            padding: 6px 8px;
+            padding: 8px 12px;
             border: none;
-            border-radius: 4px;
-            font-size: 12px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
-            background-color: #f0f2f5;
-            color: #333;
-            transition: all 0.2s ease;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            font-family: inherit;
+            letter-spacing: -0.025em;
+            text-overflow: ellipsis;
+            min-height: 36px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        button:hover::before {
+            left: 100%;
         }
 
         button:hover {
-            background-color: #e4e6e9;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        button.secondary:hover {
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+
+        button.danger:hover {
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        button.success {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+        }
+
+        button.success:hover {
+            box-shadow: 0 8px 25px rgba(81, 207, 102, 0.4);
         }
 
         input[type="text"], input[type="number"] {
-            padding: 6px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
             font-size: 12px;
-            box-sizing: border-box;
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
         }
 
         input[type="text"] {
@@ -69,228 +165,382 @@
         }
 
         input[type="number"] {
-            width: 70px;
+            width: 120px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Hide number input spinners */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
         }
 
         .input-group {
             display: flex;
             gap: 6px;
             align-items: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
         }
 
         .input-group button {
-            padding: 6px 10px;
+            padding: 8px 12px;
+            min-width: 36px;
+            flex-shrink: 0;
+        }
+
+        .input-group .input-label {
+            flex-shrink: 0;
+            min-width: 60px;
+        }
+
+        .input-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 0;
+            display: inline-block;
+            white-space: nowrap;
         }
 
         #message {
             position: fixed;
-            bottom: 10px;
-            left: 10px;
-            right: 10px;
-            padding: 8px 12px;
-            background: #4caf50;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
             color: white;
-            border-radius: 4px;
-            font-size: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transform: translateY(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             text-align: center;
             z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
         }
 
         #message.show {
             opacity: 1;
+            transform: translateY(0);
         }
 
         #message.error {
-            background: #f44336;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
         }
 
-        .protection-info {
-            background: #f8f9fa;
-            border-radius: 4px;
-            padding: 8px;
+        #message i {
+            margin-right: 8px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 8px;
+            padding: 10px;
             margin-bottom: 8px;
             font-size: 11px;
-            color: #666;
+            color: #4a5568;
+            border: 1px solid rgba(102, 126, 234, 0.2);
         }
 
-        .protection-info p {
+        .info-card p {
             margin: 4px 0;
             display: flex;
             align-items: center;
-            gap: 4px;
-            color: #444;
+            gap: 6px;
+            color: #2d3748;
             font-weight: 500;
         }
 
-        .protection-info ul {
-            margin: 4px 0 8px;
+        .info-card ul {
+            margin: 4px 0 6px;
             padding-left: 16px;
             list-style-type: disc;
+            list-style-position: outside;
         }
 
-        .protection-info li {
+        .info-card li {
             margin: 2px 0;
+            color: #4a5568;
         }
 
-        .protection-info code {
-            background: #fff;
-            padding: 1px 4px;
-            border-radius: 3px;
-            border: 1px solid #ddd;
-            font-family: monospace;
-            color: #444;
+        .info-card li::marker {
+            color: #667eea;
         }
 
-        .protection-info i {
-            color: #666;
+        .info-card code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            color: #667eea;
             font-size: 12px;
+            font-weight: 500;
+        }
+
+        .info-card i {
+            color: #667eea;
+            font-size: 14px;
         }
 
         .status-info {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-info::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+            50% { transform: translate(-50%, -50%) rotate(180deg); }
         }
 
         .status-info h3 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
+            margin: 0 0 16px 0;
+            font-size: 18px;
             font-weight: 600;
+            position: relative;
+            z-index: 1;
         }
 
         .status-numbers {
-            display: flex;
-            justify-content: space-around;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .status-item {
             text-align: center;
-            flex: 1;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .status-item:hover {
+            transform: scale(1.05);
         }
 
         .status-count {
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 20px;
+            font-weight: 700;
             display: block;
             margin-bottom: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .status-label {
-            font-size: 10px;
+            font-size: 9px;
             opacity: 0.9;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Hide scrollbar but keep functionality */
+        body, .container {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        body::-webkit-scrollbar,
+        .container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        /* Loading animation for status counts */
+        .status-count.loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Fade in animation for sections */
+        .section {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Ripple effect for buttons */
+        button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:active::after {
+            width: 300px;
+            height: 300px;
         }
     </style>
 </head>
 
 <body>
-    <div class="status-info">
-        <h3 data-i18n="tabStatus">Tab Status</h3>
-        <div class="status-numbers">
-            <div class="status-item">
-                <span class="status-count" id="activeTabsCount">-</span>
-                <span class="status-label" data-i18n="activeTabs">Active</span>
+    <div class="container">
+        <div class="status-info">
+            <h3 data-i18n="tabStatus">📊 Tab Status</h3>
+            <div class="status-numbers">
+                <div class="status-item">
+                    <span class="status-count" id="activeTabsCount">-</span>
+                    <span class="status-label" data-i18n="activeTabs">🟢 Active</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-count" id="discardedTabsCount">-</span>
+                    <span class="status-label" data-i18n="discardedTabs">💤 Discarded</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-count" id="totalTabsCount">-</span>
+                    <span class="status-label" data-i18n="totalTabs">📑 Total</span>
+                </div>
             </div>
-            <div class="status-item">
-                <span class="status-count" id="discardedTabsCount">-</span>
-                <span class="status-label" data-i18n="discardedTabs">Discarded</span>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-bolt"></i>
+                <span data-i18n="quickDiscard">Quick Discard</span>
             </div>
-            <div class="status-item">
-                <span class="status-count" id="totalTabsCount">-</span>
-                <span class="status-label" data-i18n="totalTabs">Total</span>
+            <div class="button-row">
+                <button id="discardCurrent" class="danger">
+                    <i class="fas fa-times-circle"></i><span data-i18n="discardCurrentTab">Current Tab</span>
+                </button>
+                <button id="discardOthers" class="secondary">
+                    <i class="fas fa-external-link-alt"></i><span data-i18n="discardOthers">Other Tabs</span>
+                </button>
+            </div>
+            <div class="button-row">
+                <button id="discardGroup">
+                    <i class="fas fa-layer-group"></i><span data-i18n="discardThisTabGroup">Tab Group</span>
+                </button>
+                <button id="discardHalfHour">
+                    <i class="fas fa-clock"></i><span data-i18n="discardTabsIdle30Mins">Idle 30min</span>
+                </button>
             </div>
         </div>
-    </div>
 
-    <div class="section">
-        <div class="section-title">
-            <span data-i18n="quickDiscard">Quick Discard</span>
-        </div>
-        <div class="button-row">
-            <button id="discardCurrent">
-                <i class="fas fa-times"></i><span data-i18n="discardCurrentTab">Discard Current Tab</span>
-            </button>
-            <button id="discardOthers">
-                <i class="fas fa-external-link-alt"></i><span data-i18n="discardOthers">Discard Others</span>
-            </button>
-        </div>
-        <div class="button-row">
-            <button id="discardGroup">
-                <i class="fas fa-layer-group"></i><span data-i18n="discardThisTabGroup">Discard This Tab Group</span>
-            </button>
-            <button id="discardHalfHour">
-                <i class="fas fa-clock"></i><span data-i18n="discardTabsIdle30Mins">Discard Tabs Idle 30 Mins</span>
-            </button>
-        </div>
-    </div>
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-shield-alt"></i>
+                <span data-i18n="protectionCurrentTab">Tab Protection</span>
+            </div>
+            <div class="info-card">
+                <p><i class="fas fa-info-circle"></i><span data-i18n="temporaryProtection">Temporary Protection</span></p>
+                <ul>
+                    <li data-i18n="temporaryProtectionDesc">Protect current tab from being discarded for a specific duration</li>
+                </ul>
+            </div>
+            <div class="button-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                <button id="ignoreTab24Hour" class="success">
+                    <i class="fas fa-clock"></i><span data-i18n="dontDiscardIn24h">24h</span>
+                </button>
+                <button id="ignoreTab1Week" class="success">
+                    <i class="fas fa-calendar-week"></i><span data-i18n="dontDiscardIn1Week">1w</span>
+                </button>
+                <button id="resetProtect" class="secondary">
+                    <i class="fas fa-undo"></i><span data-i18n="resetProtection">Reset</span>
+                </button>
+            </div>
 
-    <div class="section">
-        <div class="section-title">
-            <span data-i18n="protectionCurrentTab">Protection Current Tab</span>
-        </div>
-        <div class="protection-info">
-            <p><i class="fas fa-clock"></i><span data-i18n="temporaryProtection">Temporary Protection</span>:</p>
-            <ul>
-                <li data-i18n="temporaryProtectionDesc">Protect current tab from being discarded for a specific duration</li>
-                <!-- <li data-i18n="chooseProtectionDuration">Choose between 24 hours or 1 week protection</li> -->
-            </ul>
-        </div>
-        <div class="button-row">
-            <button id="ignoreTab24Hour">
-                <i class="fas fa-shield-alt"></i><span data-i18n="dontDiscardIn24h">Don't Discard in 24h</span>
-            </button>
-            <button id="ignoreTab1Week">
-                <i class="fas fa-shield-alt"></i><span data-i18n="dontDiscardIn1Week">Don't Discard in 1 week</span>
-            </button>
-            <button id="resetProtect">
-                <i class="fas fa-shield-alt"></i><span data-i18n="resetProtection">Reset</span>
-            </button>
+            <div class="info-card">
+                <p><i class="fas fa-list"></i><span data-i18n="permanentProtection">Permanent Whitelist</span></p>
+                <ul>
+                    <li data-i18n="wildcardSupport">Supports wildcards in URL patterns:</li>
+                    <li><code>*.example.com</code> - <span data-i18n="allSubdomains">All subdomains</span></li>
+                    <li><code>example.com/*</code> - <span data-i18n="allPaths">All paths</span></li>
+                    <li><code>*example*</code> - <span data-i18n="containsExample">Contains 'example'</span></li>
+                </ul>
+            </div>
+            <div class="input-group">
+                <input type="text" id="whitelistUrl" data-i18n-placeholder="enterUrlPattern" placeholder="Enter URL pattern..." />
+                <button id="ignoreTab" class="success" data-i18n-title="addToWhitelist">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button id="resetIgnoreTab" class="danger" data-i18n-title="removeFromWhitelist">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
         </div>
 
-        <div class="protection-info" style="margin-top: 12px;">
-            <p><i class="fas fa-info-circle"></i><span data-i18n="permanentProtection">Permanent Protection (Whitelist)</span>:</p>
-            <ul>
-                <li data-i18n="wildcardSupport">Supports wildcards in URL patterns:</li>
-                <li><code>*.example.com</code> - <span data-i18n="allSubdomains">All subdomains</span></li>
-                <li><code>example.com/*</code> - <span data-i18n="allPaths">All paths</span></li>
-                <li><code>*example*</code> - <span data-i18n="containsExample">Contains 'example'</span></li>
-            </ul>
+        <div class="section">
+            <div class="section-title">
+                <i class="fas fa-cog"></i>
+                <span data-i18n="autoDiscardSettings">Auto Discard Settings</span>
+            </div>
+            <div class="info-card">
+                <p><i class="fas fa-stopwatch"></i><span data-i18n="idleTimeLimit">Idle Time Limit</span></p>
+               <ul>
+                    <li data-i18n="idleTimeLimitDesc">Tabs inactive longer than this will be auto-discarded</li>
+                </ul> 
+            </div>
+            <div class="input-group">
+                <label class="input-label" for="idleLimit">Seconds:</label>
+                <input type="number" id="idleLimit" data-i18n-placeholder="enterSeconds" min="1" placeholder="1800" />
+                <button id="save" class="success">
+                    <i class="fas fa-save"></i><span data-i18n="save">Save</span>
+                </button>
+            </div>
         </div>
-        <div class="input-group">
-            <input type="text" id="whitelistUrl" data-i18n-placeholder="enterUrlPattern" />
-            <button id="ignoreTab" style="padding: 6px 8px;" data-i18n-title="addToWhitelist">
-                <i class="fas fa-plus"></i>
-            </button>
-            <button id="resetIgnoreTab" style="padding: 6px 8px;" data-i18n-title="removeFromWhitelist">
-                <i class="fas fa-undo"></i>
-            </button>
-        </div>
-    </div>
 
-    <div class="section">
-        <div class="section-title">
-            <span data-i18n="autoDiscardSettings">Auto Discard Settings</span>
-        </div>
-        <div class="protection-info">
-            <p><i class="fas fa-clock"></i><span data-i18n="idleTimeLimit">Idle Time Limit</span>:</p>
-            <ul>
-                <li data-i18n="idleTimeLimitDesc">Tabs inactive longer than this will be auto-discarded</li>
-                <!-- <li data-i18n="defaultTime">Default: 1800 seconds (30 minutes)</li> -->
-            </ul>
-        </div>
-        <div class="input-group">
-            <input type="number" id="idleLimit" data-i18n-placeholder="enterSeconds" min="1" />
-            <span style="color: #666; font-size: 12px;">sec</span>
-            <button id="save">
-                <i class="fas fa-save"></i><span data-i18n="save">Save</span>
-            </button>
-        </div>
     </div>
 
     <div id="message"></div>

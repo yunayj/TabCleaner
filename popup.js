@@ -4,7 +4,13 @@ function showMessage(messageId, substitutions = null, isError = false) {
   const text = substitutions
     ? chrome.i18n.getMessage(messageId, substitutions)
     : chrome.i18n.getMessage(messageId);
-  messageEl.textContent = text;
+
+  // Add icon based on message type
+  const icon = isError
+    ? '<i class="fas fa-exclamation-triangle"></i>'
+    : '<i class="fas fa-check-circle"></i>';
+  messageEl.innerHTML = icon + " " + text;
+
   messageEl.classList.toggle("error", isError);
   messageEl.classList.add("show");
   setTimeout(() => {
@@ -90,10 +96,46 @@ document.getElementById("discardGroup").addEventListener("click", () => {
   updateTabStatusAfterDiscard();
 });
 
+// 检查标签页是否可以被丢弃
+function canDiscardTab(tab) {
+  // 不能丢弃已经被丢弃的标签页
+  if (tab.discarded) {
+    return false;
+  }
+
+  // 不能丢弃活跃的标签页（当前正在查看的）
+  if (tab.active) {
+    return false;
+  }
+
+  // 不能丢弃特殊页面
+  const specialUrls = [
+    "chrome://",
+    "chrome-extension://",
+    "moz-extension://",
+    "edge://",
+    "about:",
+    "file://",
+  ];
+
+  if (specialUrls.some((prefix) => tab.url.startsWith(prefix))) {
+    return false;
+  }
+
+  // 不能丢弃正在播放音频的标签页
+  if (tab.audible) {
+    return false;
+  }
+
+  return true;
+}
+
 async function discardTabs(option) {
   chrome.tabs.query({ currentWindow: true }, async (tabs) => {
     const now = Date.now();
     const activeTabId = tabs.find((tab) => tab.active)?.id;
+    let discardedCount = 0;
+    let failedCount = 0;
 
     for (const tab of tabs) {
       let shouldDiscard = false;
@@ -117,8 +159,35 @@ async function discardTabs(option) {
       }
 
       if (shouldDiscard) {
-        chrome.tabs.discard(tab.id);
+        if (canDiscardTab(tab)) {
+          try {
+            await chrome.tabs.discard(tab.id);
+            discardedCount++;
+            console.log("✅ 成功丢弃标签页: " + tab.title);
+          } catch (error) {
+            failedCount++;
+            console.log(
+              '❌ 无法丢弃标签页 "' + tab.title + '": ' + error.message
+            );
+          }
+        } else {
+          console.log('⚠️ 跳过标签页 "' + tab.title + '": 不符合丢弃条件');
+        }
       }
+    }
+
+    // 显示操作结果
+    if (discardedCount > 0) {
+      console.log(
+        "🎉 操作完成: 成功丢弃 " +
+          discardedCount +
+          " 个标签页" +
+          (failedCount > 0 ? ", " + failedCount + " 个失败" : "")
+      );
+    } else if (failedCount > 0) {
+      console.log("⚠️ 操作完成: " + failedCount + " 个标签页无法丢弃");
+    } else {
+      console.log("ℹ️ 没有找到符合条件的标签页");
     }
   });
 }
@@ -143,7 +212,7 @@ function getCurrentTabUrlWithoutParams(callback) {
     if (tabs[0]) {
       const url = new URL(tabs[0].url);
       // 构建通配符格式：domain/*
-      const wildcardUrl = `${url.hostname}/*`;
+      const wildcardUrl = url.hostname + "/*";
       callback(wildcardUrl);
     }
   });
@@ -213,19 +282,40 @@ document.getElementById("save").addEventListener("click", () => {
 
 // 加载标签页状态信息
 function loadTabStatus() {
+  // 添加加载动画
+  const activeTabsElement = document.getElementById("activeTabsCount");
+  const discardedTabsElement = document.getElementById("discardedTabsCount");
+  const totalTabsElement = document.getElementById("totalTabsCount");
+
+  // 添加加载状态
+  [activeTabsElement, discardedTabsElement, totalTabsElement].forEach((el) => {
+    if (el) {
+      el.classList.add("loading");
+      el.textContent = "...";
+    }
+  });
+
   chrome.tabs.query({}, (tabs) => {
     const totalTabs = tabs.length;
     const activeTabs = tabs.filter((tab) => !tab.discarded).length;
     const discardedTabs = tabs.filter((tab) => tab.discarded).length;
 
-    // 更新显示
-    const activeTabsElement = document.getElementById("activeTabsCount");
-    const discardedTabsElement = document.getElementById("discardedTabsCount");
-    const totalTabsElement = document.getElementById("totalTabsCount");
-
-    if (activeTabsElement) activeTabsElement.textContent = activeTabs;
-    if (discardedTabsElement) discardedTabsElement.textContent = discardedTabs;
-    if (totalTabsElement) totalTabsElement.textContent = totalTabs;
+    // 延迟更新以显示动画效果
+    setTimeout(() => {
+      // 移除加载状态并更新数字
+      if (activeTabsElement) {
+        activeTabsElement.classList.remove("loading");
+        activeTabsElement.textContent = activeTabs;
+      }
+      if (discardedTabsElement) {
+        discardedTabsElement.classList.remove("loading");
+        discardedTabsElement.textContent = discardedTabs;
+      }
+      if (totalTabsElement) {
+        totalTabsElement.classList.remove("loading");
+        totalTabsElement.textContent = totalTabs;
+      }
+    }, 300);
   });
 }
 

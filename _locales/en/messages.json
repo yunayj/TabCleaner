@@ -9,16 +9,16 @@
     "message": "Quick Discard"
   },
   "discardCurrentTab": {
-    "message": "Discard Current Tab"
+    "message": "Current Tab"
   },
   "discardOthers": {
-    "message": "Discard Others"
+    "message": "Other Tabs"
   },
   "discardThisTabGroup": {
-    "message": "Discard This Tab Group"
+    "message": "Tab Group"
   },
   "discardTabsIdle30Mins": {
-    "message": "Discard Tabs Idle 30 Mins"
+    "message": "Idle 30min"
   },
   "quickDiscardHelp": {
     "message": "Discard tabs to free up memory. Current: discard active tab. Others: discard all except active. Group: discard tabs in current group. Idle: discard tabs inactive for 30+ minutes."
@@ -36,13 +36,13 @@
     "message": "Choose between 24 hours or 1 week protection"
   },
   "dontDiscardIn24h": {
-    "message": "Don't Discard in 24h"
+    "message": "24 Hours"
   },
   "dontDiscardIn1Week": {
-    "message": "Don't Discard in 1 week"
+    "message": "1 Week"
   },
   "resetProtection": {
-    "message": "Reset"
+    "message": "Reset Protection"
   },
   "protectionHelp": {
     "message": "Protect tabs from auto-discard using temporary protection or permanent whitelist rules."
